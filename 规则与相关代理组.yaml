@@ -1,0 +1,49 @@
+proxy-groups:
+  - name: "PROXY"
+    type: select
+    proxies:
+      - DIRECT
+    icon: "https://testingcf.jsdelivr.net/gh/Molarczsq/Yet-Another-Config-4-Clash@main/icon/Clash.png"
+  - name: "AIUnlock"
+    type: select
+    proxies:
+      - PROXY
+      - Domestic
+    icon: "https://www.gstatic.com/lamda/images/gemini_sparkle_4g_512_lt_f94943af3be039176192d.png"
+  - name: "Domestic"
+    type: select
+    proxies:
+      - DIRECT
+      - PROXY
+    icon: "https://testingcf.jsdelivr.net/gh/Molarczsq/Yet-Another-Config-4-Clash@main/icon/House.png"
+  - name: "MATCH"
+    type: select
+    proxies:
+      - PROXY
+      - Domestic
+    icon: "https://testingcf.jsdelivr.net/gh/Molarczsq/Yet-Another-Config-4-Clash@main/icon/Fish.png"
+rules:
+  # QUIC流量，一般的客户端支持覆写
+  - AND,((NETWORK,UDP),(IN-PORT,443)),REJECT
+  # 局域网，OpenClash 会自动修改为 PASS
+  - GEOIP,private,DIRECT
+  - GEOSITE,private,DIRECT
+  # 代理ip.sb
+  - DOMAIN-SUFFIX,ip.sb,PROXY
+  # 流媒体解锁
+  - GEOSITE,category-ai-!cn,AIUnlock
+  # 国内服务
+  - GEOIP,cn,Domestic
+  - GEOSITE,cn,Domestic
+  # GFW
+  - GEOIP,cloudflare,PROXY
+  - GEOIP,cloudfront,PROXY
+  - GEOIP,facebook,PROXY
+  - GEOIP,fastly,PROXY
+  - GEOIP,google,PROXY
+  - GEOIP,netflix,PROXY
+  - GEOIP,telegram,PROXY
+  - GEOIP,twitter,PROXY
+  - GEOSITE,gfw,PROXY
+  # 漏网之鱼，默认为 PROXY 以防止 DNS泄露
+  - MATCH,MATCH
